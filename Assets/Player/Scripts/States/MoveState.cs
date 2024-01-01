@@ -7,6 +7,7 @@ public class MoveState : State
     private float rotationY = 0.0f;
     private float speedRotating = 7.0f;
     private float speedMoving = 8.5f;
+    private float _jumpForce = 5.0f;
 
     //initialization
 
@@ -17,8 +18,8 @@ public class MoveState : State
 
     public MoveState(StateMachine stateMachine, GameObject gameObject, Rigidbody rb)
     {
-        _gameObject = gameObject;                                //получаем _gameObject игрока
-        _rb = rb;                                               //получаем Rigidbody игрока
+        _gameObject = gameObject;                           
+        _rb = rb;                                       
         _stateMachine = stateMachine;
     }
 
@@ -38,7 +39,8 @@ public class MoveState : State
     {
         CharacterRotation();
         CharacterMove();
-        CheckNewSate();
+        CheckIdle();
+        CheckJump();
     }
 
     public void FixedUpdateState()
@@ -48,7 +50,7 @@ public class MoveState : State
 
     //Functions
 
-    public void CharacterRotation() //вращение игрока и камеры по y
+    public void CharacterRotation() //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ y
     {
         float delta = Input.GetAxis("Mouse X") * speedRotating;
 
@@ -57,14 +59,23 @@ public class MoveState : State
         
     }
     
-    public void CharacterMove() //движение игрока
+    public void CharacterMove() //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     {
         float moveX = Input.GetAxis("Horizontal") * speedMoving;
         float moveZ = Input.GetAxis("Vertical") * speedMoving;
         _gameObject.transform.Translate(moveX * Time.deltaTime, 0, moveZ * Time.deltaTime);
     }
 
-    public void CheckNewSate() //проверка на выход из состояния движения
+    public void CheckJump() //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+            _stateMachine.EnterIn<JumpState>();
+        }
+    }
+
+    public void CheckIdle() //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     {
         if (Input.GetAxis("Horizontal") * speedMoving == 0.0 && Input.GetAxis("Vertical") * speedMoving == 0.0)
         {

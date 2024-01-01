@@ -6,11 +6,12 @@ public class PlayerBase : MonoBehaviour
 {
     private StateMachine _stateMachine;
     public GameObject _gameObject;
+    public GameObject _visor;
     public Rigidbody _rb;
 
     void Start()
     {
-        _stateMachine = new StateMachine(_gameObject, _rb);
+        _stateMachine = new StateMachine(_gameObject, _rb, _visor);
         _stateMachine.EnterIn<IdleState>();
     }
 

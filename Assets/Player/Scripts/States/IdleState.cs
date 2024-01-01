@@ -7,6 +7,7 @@ public class IdleState : State
     private float rotationY = 0.0f;
     private float speedRotating = 7.0f;
     private float speedMoving = 8.5f;
+    private float _jumpForce = 5.0f;
 
     //initialization
 
@@ -37,7 +38,8 @@ public class IdleState : State
     public void UpdateState()
     {
         CharacterRotation();
-        CheckNewSate();
+        CheckMove();
+        CheckJump();
     }
 
     public void FixedUpdateState()
@@ -47,16 +49,24 @@ public class IdleState : State
 
     //Functions
 
-    public void CharacterRotation() //вращение игрока и камеры по y
+    public void CharacterRotation() //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ y
     {
         float delta = Input.GetAxis("Mouse X") * speedRotating;
 
         rotationY = _gameObject.transform.localEulerAngles.y + delta;
         _gameObject.transform.localEulerAngles = new Vector3(0, rotationY, 0);
-
     }
 
-    public void CheckNewSate() //проверка на выход из состояния покоя
+    public void CheckJump() //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+            _stateMachine.EnterIn<JumpState>();
+        }
+    }
+
+    public void CheckMove() //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     {
         if (Input.GetAxis("Horizontal") * speedMoving != 0.0 || Input.GetAxis("Vertical") * speedMoving != 0.0)
         {

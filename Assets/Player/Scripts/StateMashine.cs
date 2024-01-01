@@ -9,17 +9,20 @@ public class StateMachine
     private State _currentState;
 
     public GameObject _gameObject;
+    public GameObject _visor;
     public Rigidbody _rb;
 
-    public StateMachine(GameObject gameObject, Rigidbody rb)
+    public StateMachine(GameObject gameObject, Rigidbody rb, GameObject visor)
     {
         _gameObject = gameObject;
+        _visor = visor;
         _rb = rb;
 
         _states = new Dictionary<Type, State>()
         {
             [typeof(IdleState)] = new IdleState(this, _gameObject, _rb),
             [typeof(MoveState)] = new MoveState(this, _gameObject, _rb),
+            [typeof(JumpState)] = new JumpState(this, _gameObject, _rb, _visor),
         };
     }
 
